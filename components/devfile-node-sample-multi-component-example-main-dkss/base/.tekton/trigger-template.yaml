@@ -33,7 +33,7 @@ spec:
       - name: git-url
         value: https://github.com/redhat-appstudio-qe/multi-component-example-main
       - name: output-image
-        value: quay.io/mkovarik/test-images:e60cdaedafde4bf0bb2b3d8978e8608e-$(tt.params.git-revision)
+        value: quay.io/mkovarik/test-images@sha256:f503f1b041a738b3222f0adc3ac1f3c2018e63a67bbf10f6408e3e58b497eeb9-$(tt.params.git-revision)
       - name: dockerfile
         value: https://raw.githubusercontent.com/redhat-appstudio-qe/multi-component-example-main/main/devfile-node-sample/Dockerfile
       - name: path-context
@@ -41,6 +41,9 @@ spec:
       pipelineRef:
         bundle: quay.io/redhat-appstudio/build-templates-bundle:13f5d9c921b3f727684a00084037f673a0dc4273
         name: docker-build
+      podTemplate:
+        imagePullSecrets:
+        - name: redhat-appstudio-registry-pull-secret
       workspaces:
       - name: workspace
         volumeClaimTemplate:
@@ -53,5 +56,8 @@ spec:
               requests:
                 storage: 1Gi
           status: {}
+      - name: registry-auth
+        secret:
+          secretName: redhat-appstudio-registry-pull-secret
     status: {}
 status: {}
